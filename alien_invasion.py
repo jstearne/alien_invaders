@@ -32,7 +32,7 @@ class AlienInvasion:
         while True: 
             self._check_events()
             self.ship.update() # continuously updates ship's position while game is running
-            self.bullets.update()
+            self._update_bullets()
             self._update_screen()
 
 
@@ -68,8 +68,16 @@ class AlienInvasion:
 
     def _fire_bullet(self): # preceding underscore indicates HELPER FUNCTION
         """Create new bullet and add it to the bullets group.""" # can we use this for enemies?
-        new_bullet = Bullet(self)
-        self.bullets.add(new_bullet)
+        if len(self.bullets) < self.settings.bullets_allowed: # MAX BULLETS
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)
+
+
+    def _update_bullets(self):
+        self.bullets.update()
+        for bullet in self.bullets.copy():
+                if bullet.rect.bottom <= 0:
+                    self.bullets.remove(bullet)
 
 
     def _update_screen(self):
