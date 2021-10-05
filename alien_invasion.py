@@ -11,7 +11,6 @@ from alien import Alien
 
 class AlienInvasion:
     """This class runs the game assets and behavior."""
-
     def __init__(self):
         """Initalize the game, create resources."""
         pygame.init()
@@ -25,26 +24,24 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
-
         # create instance to store game stats
         self.stats = GameStats(self)
-
         self.bg_color = (230, 230, 230) # set default bg color
-        
         # Player details in game
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group() # Group() manages all bullets onscreen so we don't have to call update on each one
         self.aliens = pygame.sprite.Group()
-
         self._create_fleet()
 
     def run_game(self):
         """Start the main loop for the game."""
         while True: 
             self._check_events()
-            self.ship.update() # continuously updates ship's position while game is running
-            self._update_bullets()
-            self._update_aliens()
+            
+            if self.stats.game_active:
+                self.ship.update() # continuously updates ship's position while game is running
+                self._update_bullets()
+                self._update_aliens()
             self._update_screen()
 
 
@@ -102,18 +99,17 @@ class AlienInvasion:
             self.bullets.empty()
             self._create_fleet()
 
+
     def _create_fleet(self):
         """Creates a fleet of enemy aliens."""
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
         available_space_x = self.settings.screen_width - (2 * alien_width)
         number_aliens_x = available_space_x // (2 * alien_width)
-
         # Number of alien rows that fit on screen
         ship_height = self.ship.rect.height
         available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
         number_rows = available_space_y // (2 * alien_height)
-
         # Create full fleet of aliens!
         for row_number in range(number_rows):
             for alien_number in range(number_aliens_x):
@@ -147,28 +143,38 @@ class AlienInvasion:
 
     def _ship_hit(self):
         """Responds to the player ship being hit by an enemy."""
-        self.stats.ships_left -= 1
-
-        # Clear screen of any remaining aliens and bullets (reset)
-        self.aliens.empty()
-        self.bullets.empty()
-
-        # Create a new enemy fleet and re-center the player ship
-        self._create_fleet()
-        self.ship.center_ship()
-
-        # Pause while reset
-        sleep(1.5)
-
+        if self.stats.ship_left > 0:
+            self.stats.ships_left -= 1
+            # Clear screen of any remaining aliens and bullets (reset)
+            self.aliens.empty()
+            self.bullets.empty()
+            # Create a new enemy fleet and re-center the player ship
+            self._create_fleet()
+            self.ship.center_ship()
+            # Pause while reset
+            sleep(2.5)
+        else:
+            self.stats.game_active = False
+        
 
     def _update_aliens(self):
         """Check if fleet at the edge of screen, then change direction for fleet."""
         self._check_fleet_edges()
         self.aliens.update()
-
         # Looks for alien-player collisions (game over)
         if pygame.sprite.spritecollideany(self.ship, self.aliens): # KEY pygame FUNCTION!
             self._ship_hit()
+        # if aliens reach the bottom of the screen
+        self._check_aliens_bottom()
+
+
+    def _check_aliens_bottom(self):
+        """Check if aliens have reached the bottom of the screen (successfully invaded)."""
+        screen_rect = self.screen.get_rect()
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom: # if an alien's rectangle is at the the bottom
+                self._ship_hit() # call _ship_hit() when game over
+                break
 
 
     def _update_screen(self):
