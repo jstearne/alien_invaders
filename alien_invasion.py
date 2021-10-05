@@ -143,6 +143,10 @@ class AlienInvasion:
         self._check_fleet_edges()
         self.aliens.update()
 
+        # Looks for alien-player collisions (game over)
+        if pygame.sprite.spritecollideany(self.ship, self.aliens): # KEY pygame FUNCTION!
+            print("The ship has been damaged!")
+
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
