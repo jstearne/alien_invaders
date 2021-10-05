@@ -30,6 +30,13 @@ class Ship:
         # update rect object from self.x
         self.rect.x = self.x
 
+
+    def center_ship(self):
+        """Centers the player ship onscreen."""
+        self.rect.midbottom = self.screen_rect.midbottom
+        self.x = float(self.rect.x)
+
+
     def blitme(self):
         """Draws the ship at its current location."""
         self.screen.blit(self.image, self.rect)

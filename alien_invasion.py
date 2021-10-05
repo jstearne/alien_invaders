@@ -1,9 +1,13 @@
 import sys
+from time import sleep
 import pygame
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+
+
 
 class AlienInvasion:
     """This class runs the game assets and behavior."""
@@ -21,6 +25,9 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
+
+        # create instance to store game stats
+        self.stats = GameStats(self)
 
         self.bg_color = (230, 230, 230) # set default bg color
         
@@ -138,6 +145,22 @@ class AlienInvasion:
         self.settings.fleet_direction *= -1
 
 
+    def _ship_hit(self):
+        """Responds to the player ship being hit by an enemy."""
+        self.stats.ships_left -= 1
+
+        # Clear screen of any remaining aliens and bullets (reset)
+        self.aliens.empty()
+        self.bullets.empty()
+
+        # Create a new enemy fleet and re-center the player ship
+        self._create_fleet()
+        self.ship.center_ship()
+
+        # Pause while reset
+        sleep(1.5)
+
+
     def _update_aliens(self):
         """Check if fleet at the edge of screen, then change direction for fleet."""
         self._check_fleet_edges()
@@ -145,7 +168,7 @@ class AlienInvasion:
 
         # Looks for alien-player collisions (game over)
         if pygame.sprite.spritecollideany(self.ship, self.aliens): # KEY pygame FUNCTION!
-            print("The ship has been damaged!")
+            self._ship_hit()
 
 
     def _update_screen(self):

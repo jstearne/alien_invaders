@@ -13,6 +13,7 @@ class Settings:
 
         # player ship movement speed
         self.ship_speed = 1.5 # 1.5 pixels per game loop (higher is faster)
+        self.ship_limit = 3 # number of lives
 
         # weapons mechanics
         self.bullet_speed = 1.5
