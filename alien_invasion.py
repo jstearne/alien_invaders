@@ -143,7 +143,7 @@ class AlienInvasion:
 
     def _ship_hit(self):
         """Responds to the player ship being hit by an enemy."""
-        if self.stats.ship_left > 0:
+        if self.stats.ships_left > 0:
             self.stats.ships_left -= 1
             # Clear screen of any remaining aliens and bullets (reset)
             self.aliens.empty()
@@ -151,7 +151,7 @@ class AlienInvasion:
             # Create a new enemy fleet and re-center the player ship
             self._create_fleet()
             self.ship.center_ship()
-            # Pause while reset
+            # Pause while resetships_lef
             sleep(2.5)
         else:
             self.stats.game_active = False
