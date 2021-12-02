@@ -5,3 +5,6 @@ Use Python Crash Course by Eric Matthes
 
 I made a Javascript version without knowing what I was doing.
 May as well try to do it better with Python since I know it better and have instructions!
+
+
+# Update with scoring, then use as a template for my own game!
