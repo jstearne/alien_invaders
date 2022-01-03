@@ -61,6 +61,15 @@ class AlienInvasion:
             elif event.type == pygame.KEYUP: # if player releases a key
                 self._check_keyup_events(event) # run keyup function
 
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
+
+    def _check_play_button(self, mouse_pos):
+        """Starts a new game when player clicks play."""
+        if self.play_button.rect.collidepoint(mouse_pos):
+            self.stats.game_active = True
+
 
     def _check_keydown_events(self, event): # handles button presses
         if event.key == pygame.K_RIGHT:
