@@ -6,6 +6,7 @@ from game_stats import GameStats
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from button import Button
 
 
 
@@ -184,6 +185,11 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+
+        # Draw the play button on screen if inactive
+        if not self.stats.game_active:
+            self.play_button.draw_buutton()
+
         pygame.display.flip()
 
 
