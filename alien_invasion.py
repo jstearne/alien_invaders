@@ -3,6 +3,7 @@ from time import sleep
 import pygame
 from settings import Settings
 from game_stats import GameStats
+from scoreboard import Scoreboard
 from button import Button
 from ship import Ship
 from bullet import Bullet
@@ -26,8 +27,10 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
-        # create instance to store game stats
+        # create instance to store game stats, create scoreboard
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
+        
         self.bg_color = (230, 230, 230) # set default bg color
         # Player details in game
         self.ship = Ship(self)
@@ -64,6 +67,7 @@ class AlienInvasion:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
+
 
     def _check_play_button(self, mouse_pos):
         """Starts a new game when player clicks play."""
@@ -215,6 +219,9 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+
+        # Draw the score information
+        self.sb.show_score()
 
         # Draw the play button on screen if inactive
         if not self.stats.game_active:
