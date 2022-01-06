@@ -1,4 +1,4 @@
-
+from settings import Settings
 
 class GameStats:
     """Track statistics/scoring for Alien Invasion."""
@@ -16,5 +16,6 @@ class GameStats:
         """Initialize statistics that change throughout the game."""
         self.ships_left = self.settings.ship_limit
         self.score = 0
+        self.level = 1
 
 

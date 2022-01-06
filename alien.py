@@ -1,5 +1,6 @@
 import pygame
 from pygame.sprite import Sprite
+from settings import Settings
 
 class Alien(Sprite):
     """A single enemy alien ship."""
